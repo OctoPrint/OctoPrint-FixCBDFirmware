@@ -5,10 +5,8 @@ to `M115` - hence the name "CBD Firmware" due to a lack of alternatives - and wh
 the established communication protocol, causing severe issues when trying to communicate and print with it from
 OctoPrint.
 
-<!--
 You can read more about this firmware and what printers are currently known to ship with it
-[in this FAQ entry]().
--->
+[in this FAQ entry](https://faq.octoprint.org/warning-firmware-broken-cbd).
 
 Installing this plugin should make any printers shipped with this broken firmware work with OctoPrint.
 
