@@ -1,0 +1,4 @@
+include README.md
+recursive-include octoprint_fix_cbd_firmware/templates *
+recursive-include octoprint_fix_cbd_firmware/translations *
+recursive-include octoprint_fix_cbd_firmware/static *
