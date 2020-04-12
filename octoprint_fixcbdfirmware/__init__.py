@@ -22,6 +22,9 @@ class FixCBDFirmwarePlugin(octoprint.plugin.OctoPrintPlugin):
 			rewritten = self.REGEX_XYZ0.sub("\g<axis>0 ", cmd).strip()
 			self._log_replacement(cmd, rewritten)
 			return rewritten
+                elif gcode == "M84" or gcode == "M18":
+                        # firmware chokes on X, Y, E & probably Z parameter on M84 and M18, fix that.
+                        return gcode
 
 	def rewrite_received(self, comm_instance, line, *args, **kwargs):
 		line = self._rewrite_wait_to_busy(line)
