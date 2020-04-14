@@ -17,14 +17,11 @@ class FixCBDFirmwarePlugin(octoprint.plugin.OctoPrintPlugin):
 			# firmware chokes on N parameters with M110, fix that
 			self._log_replacement(cmd, "M110")
 			return "M110"
-		elif gcode == "G28":
-			# firmware chokes on X, Y & probably Z parameter on G28, rewrite to X0, Y0, Z0
+		elif gcode in ["G28", "M18", "M84"]:
+			# firmware chokes on X, Y & probably Z parameter, rewrite to X0, Y0, Z0
 			rewritten = self.REGEX_XYZ0.sub("\g<axis>0 ", cmd).strip()
 			self._log_replacement(cmd, rewritten)
 			return rewritten
-                elif gcode == "M84" or gcode == "M18":
-                        # firmware chokes on X, Y, E & probably Z parameter on M84 and M18, fix that.
-                        return gcode
 
 	def rewrite_received(self, comm_instance, line, *args, **kwargs):
 		line = self._rewrite_wait_to_busy(line)
