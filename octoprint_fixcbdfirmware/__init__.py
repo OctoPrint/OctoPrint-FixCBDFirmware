@@ -8,6 +8,7 @@ import re
 class FixCBDFirmwarePlugin(octoprint.plugin.OctoPrintPlugin):
 
 	REGEX_XYZ0 = re.compile(r"(?P<axis>[XYZ])(?=[XYZ]|\s|$)")
+	REGEX_XYZE0 = re.compile(r"(?P<axis>[XYZE])(?=[XYZE]|\s|$)")
 
 	def initialize(self):
 		self._logger.info("Plugin active, working around broken 'CBD make it' firmware")
@@ -17,9 +18,14 @@ class FixCBDFirmwarePlugin(octoprint.plugin.OctoPrintPlugin):
 			# firmware chokes on N parameters with M110, fix that
 			self._log_replacement(cmd, "M110")
 			return "M110"
-		elif gcode in ["G28", "M18", "M84"]:
+		elif gcode == "G28":
 			# firmware chokes on X, Y & probably Z parameter, rewrite to X0, Y0, Z0
 			rewritten = self.REGEX_XYZ0.sub("\g<axis>0 ", cmd).strip()
+			self._log_replacement(cmd, rewritten)
+			return rewritten
+		elif gcode in ["M18", "M84"]:
+			# firmware chokes on X, Y, Z and E parameter, rewrite to X0, Y0, Z0, E0
+			rewritten = self.REGEX_XYZE0.sub("\g<axis>0 ", cmd).strip()
 			self._log_replacement(cmd, rewritten)
 			return rewritten
 
