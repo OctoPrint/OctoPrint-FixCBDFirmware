@@ -9,6 +9,7 @@ class FixCBDFirmwarePlugin(octoprint.plugin.OctoPrintPlugin):
 
 	REGEX_XYZ0 = re.compile(r"(?P<axis>[XYZ])(?=[XYZ]|\s|$)")
 	REGEX_XYZE0 = re.compile(r"(?P<axis>[XYZE])(?=[XYZE]|\s|$)")
+	FIRST_RUN = True
 
 	def initialize(self):
 		self._logger.info("Plugin active, working around broken 'CBD make it' firmware")
@@ -58,7 +59,11 @@ class FixCBDFirmwarePlugin(octoprint.plugin.OctoPrintPlugin):
 		return line
 
 	def _log_replacement(self, orig, repl):
-		self._logger.debug("Replacing {} with {}".format(orig, repl))
+		if (self.FIRST_RUN):
+			self._logger.info("Replacing {} with {}".format(orig, repl))
+			self.FIRST_RUN = False
+		else:
+			self._logger.debug("Replacing {} with {}".format(orig, repl))
 		self._log_to_terminal("{} -> {}".format(orig, repl))
 
 	def _log_to_terminal(self, *lines, **kwargs):
