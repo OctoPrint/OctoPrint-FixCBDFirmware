@@ -58,7 +58,7 @@ class FixCBDFirmwarePlugin(octoprint.plugin.OctoPrintPlugin):
 		return line
 
 	def _log_replacement(self, orig, repl):
-		self._logger.info("Replacing {} with {}".format(orig, repl))
+		self._logger.debug("Replacing {} with {}".format(orig, repl))
 		self._log_to_terminal("{} -> {}".format(orig, repl))
 
 	def _log_to_terminal(self, *lines, **kwargs):
