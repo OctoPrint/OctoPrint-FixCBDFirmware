@@ -9,7 +9,9 @@ class FixCBDFirmwarePlugin(octoprint.plugin.OctoPrintPlugin):
 
 	REGEX_XYZ0 = re.compile(r"(?P<axis>[XYZ])(?=[XYZ]|\s|$)")
 	REGEX_XYZE0 = re.compile(r"(?P<axis>[XYZE])(?=[XYZE]|\s|$)")
-	FIRST_RUN = True
+	
+	def __init__(self):
+		self._logged_replacement = {}
 
 	def initialize(self):
 		self._logger.info("Plugin active, working around broken 'CBD make it' firmware")
@@ -17,17 +19,17 @@ class FixCBDFirmwarePlugin(octoprint.plugin.OctoPrintPlugin):
 	def rewrite_sending(self, comm_instance, phase, cmd, cmd_type, gcode, subcode=None, *args, **kwargs):
 		if gcode == "M110":
 			# firmware chokes on N parameters with M110, fix that
-			self._log_replacement(cmd, "M110")
+			self._log_replacement(gcode, cmd, "M110")
 			return "M110"
 		elif gcode == "G28":
 			# firmware chokes on X, Y & probably Z parameter, rewrite to X0, Y0, Z0
 			rewritten = self.REGEX_XYZ0.sub("\g<axis>0 ", cmd).strip()
-			self._log_replacement(cmd, rewritten)
+			self._log_replacement(gcode, cmd, rewritten)
 			return rewritten
 		elif gcode in ["M18", "M84"]:
 			# firmware chokes on X, Y, Z and E parameter, rewrite to X0, Y0, Z0, E0
 			rewritten = self.REGEX_XYZE0.sub("\g<axis>0 ", cmd).strip()
-			self._log_replacement(cmd, rewritten)
+			self._log_replacement(gcode, cmd, rewritten)
 			return rewritten
 
 	def rewrite_received(self, comm_instance, line, *args, **kwargs):
@@ -38,7 +40,7 @@ class FixCBDFirmwarePlugin(octoprint.plugin.OctoPrintPlugin):
 	def _rewrite_wait_to_busy(self, line):
 		# firmware wrongly assumes "wait" to mean "busy", fix that
 		if line == "wait" or line.startswith("wait"):
-			self._log_replacement("wait", "echo:busy processing")
+			self._log_replacement("wait", "wait", "echo:busy processing", only_once=True)
 			return "echo:busy processing"
 		else:
 			return line
@@ -53,15 +55,17 @@ class FixCBDFirmwarePlugin(octoprint.plugin.OctoPrintPlugin):
 			rewritten = line.replace("ZWLF make it", "ZWLF made it, foosel fixed it")
 
 		if rewritten:
-			self._log_replacement(line, rewritten)
+			self._log_replacement("identifier", line, rewritten)
 			return rewritten
 
 		return line
 
-	def _log_replacement(self, orig, repl):
-		if (self.FIRST_RUN):
+	def _log_replacement(self, t, orig, repl, only_once=False):
+		if (not only_once or not self._logged_replacement.get(t, False)):
 			self._logger.info("Replacing {} with {}".format(orig, repl))
-			self.FIRST_RUN = False
+			self._logged_replacement[t] = True
+			if only_once:
+				self._logger.info("Further replacements of this kind will be logged at DEBUG level.")
 		else:
 			self._logger.debug("Replacing {} with {}".format(orig, repl))
 		self._log_to_terminal("{} -> {}".format(orig, repl))
