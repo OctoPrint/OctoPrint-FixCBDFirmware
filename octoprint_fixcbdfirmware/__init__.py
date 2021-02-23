@@ -93,6 +93,18 @@ class FixCBDFirmwarePlugin(octoprint.plugin.OctoPrintPlugin):
                 "user": "OctoPrint",
                 "repo": "OctoPrint-FixCBDFirmware",
                 "current": self._plugin_version,
+                "stable_branch": {
+                    "name": "Stable",
+                    "branch": "master",
+                    "commitish": ["devel", "master"],
+                },
+                "prerelease_branches": [
+                    {
+                        "name": "Prerelease",
+                        "branch": "devel",
+                        "commitish": ["devel", "master"],
+                    }
+                ],
                 "pip": "https://github.com/OctoPrint/OctoPrint-FixCBDFirmware/archive/{target_version}.zip",
             }
         }
