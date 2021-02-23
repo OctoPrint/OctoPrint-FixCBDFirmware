@@ -14,7 +14,7 @@ plugin_package = "octoprint_fixcbdfirmware"
 plugin_name = "OctoPrint-FixCBDFirmware"
 
 # The plugin's version. Can be overwritten within OctoPrint's internal data via __plugin_version__ in the plugin module
-plugin_version = "0.3.0"
+plugin_version = "0.4.0"
 
 # The plugin's description. Can be overwritten within OctoPrint's internal data via __plugin_description__ in the plugin
 # module
@@ -63,6 +63,8 @@ additional_setup_parameters = {}
 
 ########################################################################################################################
 
+import os
+
 from setuptools import setup
 
 try:
@@ -75,6 +77,16 @@ except Exception:
     import sys
 
     sys.exit(-1)
+
+
+def read_file_contents(path):
+    import codecs
+
+    with codecs.open(path, encoding="utf-8") as f:
+        return f.read()
+
+
+here = os.path.abspath(os.path.dirname(__file__))
 
 setup_parameters = octoprint_setuptools.create_plugin_setup_parameters(
     identifier=plugin_identifier,
@@ -101,5 +113,8 @@ if len(additional_setup_parameters):
     from octoprint.util import dict_merge
 
     setup_parameters = dict_merge(setup_parameters, additional_setup_parameters)
+
+setup_parameters["long_description"] = read_file_contents(os.path.join(here, "README.md"))
+setup_parameters["long_description_content_type"] = "text/markdown"
 
 setup(**setup_parameters)
