@@ -43,7 +43,7 @@ jobs:
           python-version: 3.7
       - name: 🐙 Install OctoPrint
         run: >-
-          python -m pip install octoprint --user
+          python -m pip install octoprint
       - name: 🏗 Set up dev dependencies
         run: |
           pip install -e .[develop]
@@ -62,7 +62,7 @@ jobs:
           python-version: 3.7
       - name: 🐙 Install OctoPrint
         run: >-
-          python -m pip install octoprint --user
+          python -m pip install octoprint
       - name: 🏗 Set up dev dependencies
         run: |
           pip install -e .[develop]
@@ -81,7 +81,7 @@ jobs:
           python-version: 3.7
       - name: 🐙 Install OctoPrint
         run: >-
-          python -m pip install octoprint --user
+          python -m pip install octoprint
       - name: 🏗 Set up dev dependencies
         run: |
           pip install -e .[develop]
@@ -100,7 +100,7 @@ jobs:
           python-version: 3.7
       - name: 🐙 Install OctoPrint
         run: >-
-          python -m pip install octoprint --user
+          python -m pip install octoprint
       - name: 🏗 Set up dev dependencies
         run: |
           pip install -e .[develop]
