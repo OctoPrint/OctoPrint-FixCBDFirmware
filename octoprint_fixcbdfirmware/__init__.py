@@ -1,13 +1,9 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, unicode_literals
-
 import re
 
 import octoprint.plugin
 
 
 class FixCBDFirmwarePlugin(octoprint.plugin.OctoPrintPlugin):
-
     REGEX_XYZ0 = re.compile(r"(?P<axis>[XYZ])(?=[XYZ]|\s|$)")
     REGEX_XYZE0 = re.compile(r"(?P<axis>[XYZE])(?=[XYZE]|\s|$)")
 
@@ -65,22 +61,20 @@ class FixCBDFirmwarePlugin(octoprint.plugin.OctoPrintPlugin):
 
     def _log_replacement(self, t, orig, repl, only_once=False):
         if not only_once or not self._logged_replacement.get(t, False):
-            self._logger.info("Replacing {} with {}".format(orig, repl))
+            self._logger.info(f"Replacing {orig} with {repl}")
             self._logged_replacement[t] = True
             if only_once:
                 self._logger.info(
                     "Further replacements of this kind will be logged at DEBUG level."
                 )
         else:
-            self._logger.debug("Replacing {} with {}".format(orig, repl))
-        self._log_to_terminal("{} -> {}".format(orig, repl))
+            self._logger.debug(f"Replacing {orig} with {repl}")
+        self._log_to_terminal(f"{orig} -> {repl}")
 
     def _log_to_terminal(self, *lines, **kwargs):
         prefix = kwargs.pop(b"prefix", "Repl:")
         if self._printer:
-            self._printer.log_lines(
-                *list(map(lambda x: "{} {}".format(prefix, x), lines))
-            )
+            self._printer.log_lines(*list(map(lambda x: f"{prefix} {x}", lines)))
 
     ##~~ Softwareupdate hook
 
