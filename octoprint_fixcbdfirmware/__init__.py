@@ -105,7 +105,7 @@ class FixCBDFirmwarePlugin(octoprint.plugin.OctoPrintPlugin):
 
 
 __plugin_name__ = "Fix CBD Firmware Plugin"
-__plugin_pythoncompat__ = ">=2.7,<4"  # python 2 and 3
+__plugin_pythoncompat__ = ">=3,<4"  # python 3 only
 
 
 def __plugin_load__():
