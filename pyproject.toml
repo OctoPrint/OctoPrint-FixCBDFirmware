@@ -1,0 +1,42 @@
+[build-system]
+requires = [
+    "setuptools>=68",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "OctoPrint-FixCBDFirmware"
+version = "0.4.0"
+description = "Fixes communication with a broken firmware making its rounds that identifies as 'CBD make it'"
+authors = [
+    { name = "Gina Häußge", email = "gina@octoprint.org" },
+]
+requires-python = ">=3.7,<4"
+dependencies = []
+dynamic = [
+    "license",
+]
+
+[project.entry-points."octoprint.plugin"]
+fixcbdfirmware = "octoprint_fixcbdfirmware"
+
+[project.urls]
+Homepage = "https://github.com/OctoPrint/OctoPrint-FixCBDFirmware"
+
+[project.optional-dependencies]
+develop = [
+    "go-task-bin",
+]
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = [
+    "octoprint_fixcbdfirmware",
+    "octoprint_fixcbdfirmware.*",
+]
